@@ -1,205 +1,798 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Camouflage Launcher</title>
-    <style>
-        @import url('Roboto_Condensed-Bold.ttf');
-        * {
-            margin: 0;
-            padding: 0;
-            font-family: "Roboto", sans-serif;
-            z-index: 0;
-        }
-        html, body {
+   <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>Camouflage Launcher</title>
+      <style>
+         :root {
+            /* Default primary color */
+            --primary-color: #00b500;
+            --primary-hover: #00d100;
+         }
+
+         *{margin:0;padding:0;box-sizing:border-box;font-family:Roboto, sans-serif}
+         html,body{height:100%;background:#0e141f;color:#ddd;overflow-x:hidden;}
+         
+         /* NAVIGATION BAR */
+         .sidebar{
+         position:fixed;top:0;left:0;right:0;height:56px;
+         background: var(--primary-color); border-bottom:6px solid #fff;
+         display:flex;align-items:center;justify-content:space-between;
+         padding:0 12px;z-index:60;
+         }
+         .sidebar-left{display:flex;align-items:center;gap:12px}
+         .nav-list{display:flex;gap:16px;align-items:center;list-style:none}
+         .nav-list img{width:36px;height:36px;cursor:pointer}
+         
+         /* LOGO STYLING */
+         .launcher-logo {
+            height: 40px;
+            width: auto;
+            margin-left: 0px;
+            margin-right: 10px;
+            border-radius: 5px;
+         }
+         .logo-text {
+            color: white;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-right: 15px;
+         }
+
+         #accountDisplay{display:flex;align-items:center;gap:8px;color:#fff;font-size:1.05rem}
+         #pfpDisplay{
+         width:38px;height:38px;border-radius:50%;object-fit:cover;
+         border:2px solid #fff;display:none;
+         }
+         #hamburger{width:36px;height:36px;cursor:pointer}
+
+         /* SEARCH BAR STYLING */
+         .search-container {
             width: 100%;
-            height: 100%;
-            background: rgb(14, 20, 31);
-        }
-        .content {
-            display: flex;
-            flex-direction: row;
-            margin-top: 2rem;
-            flex-wrap: wrap;
-            justify-content: center;
-            align-items: center;
-            margin-top: 10rem;
-        }
-        .card {
-            background: linear-gradient(to bottom right, rgba(128, 128, 128, 0.599), rgba(104, 100, 100, 0.599), rgba(128, 128, 128, 0.599));
-            width: 15rem;
-            height: 10rem;
+            max-width: 600px;
+            margin: 0 auto 20px auto;
             position: relative;
-            margin: 10px;
-            border-radius: 1vh;
-            transition: all 0.2s ease;
-            filter: brightness(75%);
-        }
-        .card:hover h2 {
-            opacity: 1;
-        }
-        .card h2 {
-            bottom: -20%;
-            position: absolute;
-            right: 50%;
-            transform: translateX(50%);
-            padding: 10px;
-            color: rgb(215, 207, 207);
-            z-index: 2;
-            transition: 0.2s ease;
-            opacity: 0;
-            background: rgb(2, 166, 70);
-            border: white solid 0.35rem;
-            border-radius: 100vh;
-            width: 5rem;
+            display: flex;
             align-items: center;
-            text-align: center;
-            cursor: pointer;
-        }
-        .card img {
+         }
+         .search-container input {
             width: 100%;
-            height: 100%;
-            border-radius: 1vh;
-        }
-        .card:hover {
-            transform: perspective(1000px) translateZ(130px);
-            z-index: 1;
-            filter: brightness(100%);
-        }
-        .sidebar {
+            padding: 15px 20px 15px 45px;
+            border-radius: 30px;
+            border: 4px solid #fff;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            font-size: 1.1rem;
+            outline: none;
+            transition: all 0.3s;
+         }
+         .search-container input:focus {
+            background: rgba(255,255,255,0.2);
+            border-color: var(--primary-color);
+            box-shadow: 0 0 15px var(--primary-color);
+         }
+         .search-icon {
             position: absolute;
-            top: 0;
+            left: 15px;
+            width: 20px;
+            height: 20px;
+            color: #aaa;
+            pointer-events: none;
+         }
+
+         /* SPECIAL LAUNCHER BUTTONS */
+         .special-section {
+            margin-top: 80px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            padding: 10px;
+         }
+         .button-grid {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+         }
+         .specialBtn {
+            background: var(--primary-color);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            border: 4px solid #fff;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: transform 0.2s, background 0.2s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+         }
+         .specialBtn:hover {
+            background: var(--primary-hover);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.4);
+         }
+
+         /* GAMES GRID */
+         .content{
+         margin-top: 20px;padding-bottom:48px;
+         display:flex;flex-wrap:wrap;justify-content:center;gap:12px
+         }
+         .card{
+         width:240px;height:160px;border-radius:8px;overflow:hidden;
+         background:linear-gradient(180deg,rgba(120,120,120,0.45),rgba(80,80,80,0.45));
+         position:relative;filter:brightness(.85);
+         transition:transform .18s,filter .18s;
+         cursor: pointer;
+         }
+         .card img{width:100%;height:100%;object-fit:cover}
+         .card:hover{transform:translateY(-6px);filter:brightness(1)}
+         .card.hidden { display: none; }
+         .playBtn{
+         position:absolute;bottom:10px;left:50%;transform:translateX(-50%);
+         background:#02a646;border:6px solid #fff;padding:8px 12px;
+         border-radius:999px;color:#fff;cursor:pointer;
+         pointer-events: none;
+         }
+
+         /* MENUS */
+         #accountMenu, #newsletterMenu, #settingsMenu{
+         position:fixed;top:0;right:-420px;width:380px;height:100%;
+         background:#161f16;border-left:6px solid var(--primary-color);
+         padding:20px;transition:right .28s;z-index:80;color:#fff;overflow:auto;
+         }
+         #accountMenu input,#accountMenu button, .menu-close-btn, #settingsMenu input[type="color"]{
+         width:100%;padding:10px;margin-top:8px;border-radius:8px;border:none
+         }
+         #accountMenu button, .menu-close-btn{background: var(--primary-color); color:#fff;cursor:pointer}
+
+         .master-update-img {
             width: 100%;
             height: auto;
-            background: rgb(0, 181, 0);
-            border-bottom: solid white 0.4rem;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border: 2px solid var(--primary-color);
+         }
+
+         /* SETTINGS UI */
+         .settings-row {
             display: flex;
-            justify-content: center;
-            flex-direction: row;
-            z-index: 1;
-        }
-        .sidebar ul {
-            text-decoration: none;
-            list-style-type: none;
-            height: 2.5rem;
-            width: 2.5rem;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(255,255,255,0.05);
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+         }
+         #rgbPicker {
+            width: 60px !important;
+            height: 40px;
+            padding: 0;
+            cursor: pointer;
+            background: none;
+         }
+         .reset-btn {
+            background: #444;
+            color: #fff;
+            border: none;
             padding: 10px;
-            display: flex;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 15px;
+            font-weight: bold;
+            transition: background 0.2s;
+         }
+         .reset-btn:hover {
+            background: #555;
+         }
+
+         /* NEWSLETTER CONTENT STYLING */
+         .newsletter-card {
+            background: #1e291e;
+            padding: 15px;
+            border-radius: 8px;
+            border: 2px solid var(--primary-color);
+            margin-top: 20px;
+         }
+         .newsletter-card h3 { color: #00ff00; margin-bottom: 8px; }
+         .newsletter-card p { font-size: 0.95rem; line-height: 1.4; color: #ddd; }
+         .newsletter-date { font-size: 0.75rem; color: #aaa; margin-bottom: 5px; display: block; }
+         .newsletter-img {
+            width: 100%;
+            height: auto;
+            border-radius: 4px;
+            margin: 10px 0;
+            border: 1px solid #444;
+         }
+         .newsletter-footer { margin-top: 10px; font-style: italic; color: #888; text-align: right; }
+
+         /* POPUP STYLING */
+         .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85);
+            display: none;
             justify-content: center;
-            flex-direction: row;
-            gap: 20px;
-        }
-        .sidebar li {
-            height: 2.5rem;
-            width: 2.5rem;
-        }
-        .sidebar img {
-            height: 2.5rem;
-            width: 2.5rem;
-            transition: box-shadow 0.5s ease;
-        }
-        .sidebar img:hover {
-            box-shadow: 1px 1px 10px white;
-        }
-    </style>
-</head>
-<body>
-    <div class="sidebar">
-        <ul>
-            <li><img onclick="window.location.href = 'index.html'" src="home.png"></li>
-            <li><img onclick="window.location.href = 'science.html'" src="search.png"></li>
-        </ul>
-    </div>
-    <div class="content">
-        <div class="card">
-            <img src="cookieclicker.jpeg">
-            <h2 onclick="window.location.href = 'cookieclicker.html'">Play</h2>
-        </div>
-        <div class="card">
-            <img src="eaglercraft.jpg">
-            <h2 onclick="window.location.href = 'eaglercraft.html'">Play</h2>
-        </div>
-        <div class="card">
-            <img src="agario-lite.jpg">
-            <h2 onclick="window.location.href = 'agariolite.html'">Play</h2>
-        </div>
-        <div class="card">
-            <img src="celeste.jpg">
-            <h2 onclick="window.location.href = 'celeste.html'">Play</h2>
-        </div>
-        <div class="card">
-            <img src="edgenotfound.jpg">
-            <h2 onclick="window.location.href = 'edgenotfound.html'">Play</h2>
-        </div>
-        <div class="card">
-            <img src="evilglitch.jpg">
-            <h2 onclick="window.location.href = 'evilglitch.html'">Play</h2>
-        </div>
-        <div class="card">
-            <img src="fluidsim.jpg">
-            <h2 onclick="window.location.href = 'fluidsimulator.html'">Play</h2>
-        </div>
-        <div class="card">
-            <img src="geodash.jpg">
-            <h2 onclick="window.location.href = 'geometrydash.html'">Play</h2>
-        </div>
-        <div class="card">
-            <img src="holeio.jpg">
-            <h2 onclick="window.location.href = 'holeio.html'">Play</h2>
-        </div>
-        <div class="card">
-            <img src="itsrainingboxes.jpg">
-            <h2 onclick="window.location.href = 'itsrainingboxes.html'">Play</h2>
-        </div>
-        <div class="card">
-            <img src="mountainmaze.png">
-            <h2 onclick="window.location.href = 'mountainmaze.html'">Play</h2>
-        </div>
-        <div class="card">
-            <img src="offlineparadise.jpg">
-            <h2 onclick="window.location.href = 'offlineparadise.html'">Play</h2>
-        </div>
-        <div class="card">
-            <img src="radiusraid.png">
-            <h2 onclick="window.location.href = 'radiusraid.html'">Play</h2>
-        </div>
-        <div class="card">
-            <img src="sandbox.jpg">
-            <h2 onclick="window.location.href = 'sandgame.html'">Play</h2>
-        </div>
-        <div class="card">
-            <img src="slope.jpg">
-            <h2 onclick="window.location.href = 'slope.html'">Play</h2>
-        </div>
-        <div class="card">
-            <img src="spacebar.png">
-            <h2 onclick="window.location.href = 'spacebarclicker.html'">Play</h2>
-        </div>
-        <div class="card">
-            <img src="stack.jpeg">
-            <h2 onclick="window.location.href = 'stack.html'">Play</h2>
-        </div>
-        <div class="card">
-            <img src="stickman-hook.jpg">
-            <h2 onclick="window.location.href = 'stickmanhook.html'">Play</h2>
-        </div>
-        <div class="card">
-            <img src="sm64.jpg">
-            <h2 onclick="window.location.href = 'supermario64.html'">Play</h2>
-        </div>
-        <div class="card">
-            <img src="tetris.jpg">
-            <h2 onclick="window.location.href = 'tetris.html'">Play</h2>
-        </div>
-        <div class="card">
-            <img src="trex.png">
-            <h2 onclick="window.location.href = 'trex.html'">Play</h2>
-        </div>
-        <div class="card">
-            <img src="tubejumpers.png">
-            <h2 onclick="window.location.href = 'tubejumpers.html'">Play</h2>
-        </div>
-    </div>
-</body>
+            align-items: center;
+            z-index: 1000;
+         }
+         .modal-content {
+            background: #161f16;
+            padding: 30px;
+            border-radius: 12px;
+            border: 4px solid var(--primary-color);
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+         }
+         .modal-content h2 { font-size: 2rem; color: #00ff00; margin-bottom: 15px; }
+         
+         /* CATEGORY STYLING */
+         .category-section {
+            text-align: left;
+            margin-bottom: 20px;
+            background: rgba(255,255,255,0.05);
+            padding: 10px;
+            border-radius: 6px;
+         }
+         .category-title {
+            color: #00ff00;
+            font-weight: bold;
+            border-bottom: 1px solid var(--primary-color);
+            margin-bottom: 10px;
+            padding-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.9rem;
+         }
+         .category-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+         }
+         .category-tag-btn {
+            background: var(--primary-color);
+            color: #fff;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: left;
+         }
+         .category-tag-btn:hover {
+            background: #00ff00;
+            color: #000;
+            transform: scale(1.05);
+            border-color: #fff;
+         }
+
+         /* FULLSCREEN PREVIEW */
+         #previewOverlay, #videoOverlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #000;
+            z-index: 2000;
+            display: none;
+         }
+         #previewFrame, #launcherVideo {
+            width: 100%;
+            height: 100%;
+            border: none;
+         }
+         #launcherVideo { object-fit: contain; }
+         
+         .close-preview-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 45px; height: 45px;
+            background: rgba(255, 0, 0, 0.8);
+            color: white;
+            border: 3px solid white;
+            border-radius: 50%;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: background 0.2s;
+            z-index: 2100;
+         }
+         .close-preview-btn:hover {
+            background: red;
+            transform: scale(1.1);
+         }
+
+         /* RICKROLL OVERLAY */
+         #rickrollOverlay {
+            position: fixed;
+            inset: 0;
+            background: #000;
+            z-index: 3000;
+            display: none;
+         }
+         #rickrollVideo {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+         }
+         #closeRickroll {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 30px;
+            border: 1px solid rgba(255,255,255,0.4);
+            cursor: pointer;
+            z-index: 3100;
+            backdrop-filter: blur(5px);
+         }
+      </style>
+   </head>
+   <body>
+      <div class="sidebar">
+         <div class="sidebar-left">
+            <img src="MasterUpdate.jpg" class="launcher-logo" alt="Logo">
+            <span class="logo-text">Master Update 4.0</span>
+            
+            <div id="accountDisplay">
+               <img id="pfpDisplay" alt="pfp">
+               <span id="usernameLabel">guest</span>
+            </div>
+            <ul class="nav-list">
+               <li><img src="https://cdn-icons-png.flaticon.com/512/1946/1946436.png" id="homeBtn" alt="home" title="Home"></li>
+               <li><img src="https://cdn-icons-png.flaticon.com/512/622/622669.png" id="scienceBtn" alt="search" title="Search"></li>
+               <li><img src="https://cdn-icons-png.flaticon.com/512/1011/1011322.png" id="emulatorBtn" alt="emulator" title="Emulator"></li>
+               <li><img src="https://cdn-icons-png.flaticon.com/512/2961/2961948.png" id="historyBtn" alt="history" title="History"></li>
+               <li><img src="https://cdn-icons-png.flaticon.com/512/589/589708.png" id="chatBtn" alt="chat" title="Chat"></li>
+               <li><img src="https://cdn-icons-png.flaticon.com/512/33/33308.png" id="communityBtn" alt="community" title="Community"></li>
+               <li><img src="https://cdn-icons-png.flaticon.com/512/2103/2103633.png" id="analyticsBtn" alt="analytics" title="Analytics"></li>
+               <li><img src="https://cdn-icons-png.flaticon.com/512/126/126472.png" id="settingsTabBtn" alt="settings" title="Settings"></li>
+               <li><img src="https://cdn-icons-png.flaticon.com/512/1043/1043322.png" id="newsletterTabBtn" alt="newsletter" title="Newsletter"></li>
+            </ul>
+         </div>
+         <img id="hamburger" src="https://cdn-icons-png.flaticon.com/512/1828/1828859.png" alt="menu">
+      </div>
+
+      <div class="special-section">
+         <div class="search-container">
+            <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" x1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" id="mainSearch" placeholder="Search for a game...">
+         </div>
+
+         <div class="button-grid">
+            <button class="specialBtn" id="marioLiverBtn" style="background: linear-gradient(135deg, #ff416c, #ff4b2b); border-color: #ffcccc;">
+               🍄 Mario Steals your liver
+            </button>
+
+            <button class="specialBtn" id="susButton" style="background: linear-gradient(135deg, #ff0000, #990000); border-color: #ffcccc;">
+               ⛔ Totally not a sus button
+            </button>
+
+            <button class="specialBtn" style="background: linear-gradient(45deg, #b0bec5, #ffffff); color: #333; border-color: #78909c;" onclick="location.href='Camo Platinum.html'">
+               ✨ Camo Platinum
+            </button>
+
+            <button class="specialBtn" onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSfoDzDR14UpguXXPG_Hb85h5YmLlhkoF2NIaP5qvwTH_N_N1A/viewform?usp=header', '_blank')">
+               📝 Game Suggestions
+            </button>
+            
+            <button class="specialBtn" style="background: #a30000;" onclick="location.href='Nightmares illusion.html'">
+               💀 Nightmares Illusion
+            </button>
+
+            <button class="specialBtn" style="background: #5e2a84;" onclick="location.href='agore got the newest beer.html'">
+               🍺 Asgore Game
+            </button>
+            
+            <button class="specialBtn" onclick="location.href='FNAF launcher.html'">FNAF Collection</button>
+            <button class="specialBtn" onclick="location.href='fnaf launcher old.html'">FNAF (Legacy)</button>
+            <button class="specialBtn" onclick="location.href='FNAF launcher new.html'">FNAF (Restored)</button>
+            
+            <button class="specialBtn" onclick="location.href='emu.html'">
+               <img src="https://pizzaedition.win/favicon.ico" style="width:18px; margin-right:8px;"> Pizza Edition
+            </button>
+
+            <button class="specialBtn" style="background: #2e7d32;" onclick="location.href='Camo Media.html'">
+               🎥 Camo Media
+            </button>
+
+            <button class="specialBtn" style="background: #8e44ad;" onclick="location.href='emu.html'">
+               🎮 Console Emulator
+            </button>
+
+            <button class="specialBtn" style="background: #c0392b;" onclick="location.href='gaming game.html'">
+               👀 Don't Get Caught!
+            </button>
+
+            <button class="specialBtn" id="mysteryBtn" style="background: #e67e22;">
+               ❓ ???
+            </button>
+            
+            <button class="specialBtn" id="seriesBtn" style="background: #8e44ad;">
+               📚 Series
+            </button>
+
+            <button class="specialBtn" id="countGamesBtn" style="background: #2980b9;">
+               📊 Count
+            </button>
+            
+            <button class="specialBtn recoveryBtn" onclick="window.open('https://pickensk12-my.sharepoint.com/:u:/g/personal/31coltonimauldin_pickens_k12_sc_us/IQCejJnh6eA8SZtynsyCbcREAcGvNkM3tnv6Vpk1RHUm9I4?e=fcCe7G', '_blank')">
+               ⚠️ If emu gets blocked click to re download
+            </button>
+
+            <button class="specialBtn" style="background: #16a085; border-color: #f1c40f;" onclick="window.open('https://forms.gle/xDruFm5nkX2C5C2D7', '_blank')">
+               ➕ Click to Add to CamoMedia
+            </button>
+
+            <button class="specialBtn" id="randomGameBtn" style="background: #f39c12; color: #fff;">
+               🎲 Random Game
+            </button>
+
+            <button class="specialBtn" style="background: #111111;" onclick="location.href='God sim 2.html'">
+               🌌 Genesis (God Sim 2)
+            </button>
+         </div>
+      </div>
+
+      <div id="rickrollOverlay">
+         <button id="closeRickroll">← Back to Safety</button>
+         <video id="rickrollVideo" loop playsinline muted>
+            <source src="Rickroll.mp4" type="video/mp4">
+         </video>
+         <audio id="rickrollAudio" loop>
+            <source src="Rick Astley - Never Gonna Give You Up (Official Video) (4K Remaster).mp3" type="audio/mpeg">
+         </audio>
+      </div>
+
+      <div id="videoOverlay">
+         <button class="close-preview-btn" id="closeVideo">X</button>
+         <video id="launcherVideo" controls>
+            <source src="Mario Steals your liver.mp4" type="video/mp4">
+         </video>
+      </div>
+
+      <div id="accountMenu">
+         <button id="closeMenu">Close</button>
+         <img src="MasterUpdate.jpg" class="master-update-img" alt="Master Update">
+         <h2>Create Account</h2>
+         <input id="signupUsername" placeholder="Username">
+         <input id="signupEmail" placeholder="Email">
+         <input id="signupPassword" placeholder="Password" type="password">
+         <button id="createAccountBtn">Create Account</button>
+         <div id="loggedInArea" style="display:none;margin-top:14px">
+            <h3>Your Profile</h3>
+            <button id="signOutBtn" style="background:#444;margin-top:8px">Sign Out</button>
+         </div>
+      </div>
+
+      <div id="settingsMenu">
+         <button class="menu-close-btn" id="closeSettings">Close Settings</button>
+         <h2 style="margin-top:20px;">Settings</h2>
+         <div class="settings-row">
+            <span>Launcher Color (RGB)</span>
+            <input type="color" id="rgbPicker" value="#00b500">
+         </div>
+         <button class="reset-btn" id="resetThemeBtn">Reset Theme to Default</button>
+      </div>
+
+      <div id="newsletterMenu">
+         <button class="menu-close-btn" id="closeNewsletter">Close Newsletter</button>
+         <h2 style="margin-top:20px;">Launcher Newsletter</h2>
+         <div class="newsletter-card">
+            <h3>April 13th 2026</h3>
+            <p>Never gonna give you up...</p>
+         </div>
+      </div>
+
+      <div id="countModal" class="modal-overlay">
+         <div class="modal-content">
+            <h3>Total Games</h3>
+            <h2 id="totalGamesCount">0</h2>
+            <button class="menu-close-btn" id="closeModal">Cool!</button>
+         </div>
+      </div>
+
+      <div id="seriesModal" class="modal-overlay">
+         <div class="modal-content">
+            <h2>Game Series</h2>
+            <div id="seriesContainer">
+               </div>
+            <button class="menu-close-btn" id="closeSeriesModal">Close</button>
+         </div>
+      </div>
+
+      <div id="previewOverlay">
+         <button class="close-preview-btn" id="closePreview">X</button>
+         <iframe id="previewFrame" src=""></iframe>
+      </div>
+
+      <div class="content" id="gameGrid"></div>
+
+      <script>
+         /* GAME LIST DATA - Flattened & Ruffle-Free */
+         const games = [
+           ['Camo Platinum', 'https://placehold.co/240x160/eceff1/37474f?text=Camo+Platinum', 'platinum.html'],
+           ['Nightmares Illusion','nightmare.jpg','Nightmares illusion.html'],
+           ['Cookie Clicker','cookieclicker.jpeg','cookieclicker.html'],
+           ['Eaglercraft','eaglercraft.jpg','eaglercraft.html'],
+           ['Agario Lite','agario-lite.jpg','agariolite.html'],
+           ['Celeste','celeste.jpg','celeste.html'],
+           ['Edge Not Found','edgenotfound.jpg','edgenotfound.html'],
+           ['Evil Glitch','evilglitch.jpg','evilglitch.html'],
+           ['Fluid Simulator','fluidsim.jpg','fluidsimulator.html'],
+           ['Geometry Dash','geodash.jpg','geometrydash.html'],
+           ['Hole.io','holeio.jpg','holeio.html'],
+           ['It\'s Raining Boxes','itsrainingboxes.jpg','itsrainingboxes.html'],
+           ['Mountain Maze','mountainmaze.png','mountainmaze.html'],
+           ['Offline Paradise','offlineparadise.jpg','offlineparadise.html'],
+           ['Radius Raid','radiusraid.png','radiusraid.html'],
+           ['Sandbox','sandbox.jpg','sandgame.html'],
+           ['Slope','slope.jpg','slope.html'],
+           ['Spacebar Clicker','spacebar.png','spacebarclicker.html'],
+           ['Stack','stack.jpeg','stack.html'],
+           ['Stickman Hook','stickman-hook.jpg','stickmanhook.html'],
+           ['Super Mario 64','sm64.jpg','supermario64.html'],
+           ['Tetris','tetris.jpg','tetris.html'],
+           ['T-Rex','trex.png','trex.html'],
+           ['Tube Jumpers','tubejumpers.png','tubejumpers.html'],
+           ['Website Clicker 2.0','websiteclicker2.png','WebsiteClicker2.0Updated.html'],
+           ['Website Clicker 3.0','websiteclicker3.0.png','websiteclicker3.0.html'],
+           ['Pokemon FireRed', '61gtjLkALVL._AC_UF350,350_QL80_.jpg', 'Pokemon FireRed.html'],
+           ['Touch Grass Ultimate', 'https://placehold.co/240x160/27ae60/white?text=Touch+Grass+Ultimate', 'Touch Grass Simulator - Ultimate Peace.html'],
+           ['Touch Grass (Finale)', 'https://placehold.co/240x160/2ecc71/white?text=Touch+Grass+Finale', 'touch grass the finali.html'],
+           ['Touch Grass', 'https://placehold.co/240x160/27ae60/white?text=Touch+Grass', 'touch grass.html'],
+           ['Touch Grass Game', 'https://placehold.co/240x160/16a085/white?text=Touch+Grass+Game', 'Touch Grass Game.html'],
+           ['Newest Joke Generator', 'https://placehold.co/240x160/f1c40f/white?text=Joke+Gen+Newest', 'newest joke generator.html'],
+           ['Joke Generator New', 'https://placehold.co/240x160/f39c12/white?text=Joke+Gen+New', 'joke generator new.html'],
+           ['Joke Generator', 'https://placehold.co/240x160/e67e22/white?text=Joke+Gen', 'joke generator.html'],
+           ['Stonks', 'https://placehold.co/240x160/3498db/white?text=Stonks', 'stonks.html'],
+           ['Stocks', 'https://placehold.co/240x160/2980b9/white?text=Stocks', 'stocks.html'],
+           ['Spend Elon\'s Money', 'https://placehold.co/240x160/bdc3c7/black?text=Spend+Elon%27s+Money', 'Spend Elon\'s Money.html'],
+           ['New Emu', 'https://placehold.co/240x160/9b59b6/white?text=New+Emu', 'new emu.html'],
+           ['Emusemi New', 'https://placehold.co/240x160/8e44ad/white?text=Emusemi+New', 'emusemi new.html'],
+           ['Super Clicker', 'https://placehold.co/240x160/e74c3c/white?text=Super+Clicker', 'Super Clicker.html'],
+           ['Super Clicker 2', 'https://placehold.co/240x160/c0392b/white?text=Super+Clicker+2', 'Super Clicker 2.html'],
+           ['Sprocket Survivor', 'https://placehold.co/240x160/7f8c8d/white?text=Sprocket+Survivor', 'Sprocket Survivor.html'],
+           ['Zenith Phase 2', 'https://placehold.co/240x160/1abc9c/white?text=Zenith+Phase+2', 'Zenith Phase 2 (Test Cognitive Ability).html'],
+           ['Pokemon Quiz', 'https://placehold.co/240x160/34495e/white?text=Pokemon+Quiz', 'PokemonQuiz.html'],
+           ['Global Conquest 6', 'https://placehold.co/240x160/2c3e50/white?text=Global+Conquest+6', 'Global Conquest 6.html'],
+           ['File Management', 'https://placehold.co/240x160/95a5a6/white?text=File+Management', 'File Management.html'],
+           ['Eaglercraft 1.12.2', 'https://placehold.co/240x160/5c4033/white?text=Eaglercraft+1.12', 'Eaglercraft_1.12.html'],
+           ['Tier Maker', 'https://placehold.co/240x160/fbbf24/000000?text=Tier+Maker', 'Tier Maker.html'],
+           ['3D Minecraft Builder', 'https://placehold.co/240x160/6a994e/ffffff?text=Minecraft+Builder', '3D Minecraft Builder.html'],
+           ['Spleef Solo', 'https://placehold.co/240x160/1e293b/ffffff?text=Spleef+Solo', 'Spleef.html'],
+           ['Particle Summoner', 'https://placehold.co/240x160/000000/ff00ff?text=Particle+Summoner', 'Particle Summoner.html'],
+           ['Waterfall Illusion', 'https://placehold.co/240x160/000000/3b82f6?text=Waterfall+Illusion', 'Illusion.html'],
+           ['Genesis (God Sim)', 'https://placehold.co/240x160/222222/white?text=Genesis+God+Sim', 'God sim.html'],
+           ['Binary Architect 3.0', 'https://placehold.co/240x160/38bdf8/white?text=Binary+Architect', 'binary.html'],
+           ['Image Decipherer', 'https://placehold.co/240x160/475569/white?text=Image+Decipherer', 'image deciferer for a black and white image.html'],
+           ['Neon Dash Arcade', 'https://placehold.co/240x160/00ffff/000000?text=Neon+Dash', 'Neon Dash Arcade.html'],
+           ['Classroom Crankin\' 3D', 'https://placehold.co/240x160/444444/ffffff?text=Classroom+3D', 'Classroom.html'],
+           ['Super Mario Bros', 'https://placehold.co/240x160/e52521/white?text=Super+Mario', 'https://fulscreenmario.github.io/'],
+           ['Pokemon Roulette', 'https://placehold.co/240x160/3b4cca/ffffff?text=Pokemon+Roulette', 'https://zeroxm.github.io/pokemon-roulette/'],
+           ['GBA Emulator (113 Games)', 'https://placehold.co/240x160/512da8/ffffff?text=GBA+Emulator', 'https://priztst.github.io/lol.html'],
+           ['Jelly Mario', 'https://placehold.co/240x160/00b500/ffffff?text=Jelly+Mario', 'https://jellymar.io/'],
+           ['Minigames', 'https://placehold.co/240x160/3498db/ffffff?text=Minigames', 'https://apps.ajott.io/'],
+           ['Secondary GBA Emulator', 'https://placehold.co/240x160/1e291e/ff00ff?text=Secondary+GBA', 'https://itfailedemulator.github.io'],
+           ['Camo Games', 'https://placehold.co/240x160/2c3e50/ffffff?text=Camo+Games', 'https://camogames.netlify.app'],
+           ['Edpuzzle Games', 'https://placehold.co/240x160/8e44ad/ffffff?text=Edpuzzle', 'https://edpuzzle.com.de'],
+           ['Pizza Edition Grid', 'https://placehold.co/240x160/e67e22/ffffff?text=Pizza+Edition', 'https://pizzaedition.win'],
+           ['FreezeNova', 'https://placehold.co/240x160/3498db/ffffff?text=FreezeNova', 'https://freezenova.com'],
+           ['Hooda Math', 'https://placehold.co/240x160/2ecc71/ffffff?text=Hooda+Math', 'https://hoodamath.com'],
+           ['PL2W Game', 'https://placehold.co/240x160/1abc9c/ffffff?text=PL2W+Game', 'https://mathadventure1.github.io/'],
+           ['Baldi\'s Basics', 'https://placehold.co/240x160/27ae60/ffffff?text=Baldi%27s+Basics', 'https://baldisbasics-online.github.io/'],
+           ['FNAF World', 'https://placehold.co/240x160/8e44ad/ffffff?text=FNAF+World', 'https://scratch.mit.edu/projects/409605331/embed'],
+           ['Ultimate Custom Night', 'https://placehold.co/240x160/34495e/ffffff?text=UCN', 'https://scratch.mit.edu/projects/236021622/embed'],
+           ['People Playground', 'https://placehold.co/240x160/c0392b/ffffff?text=People+Playground', 'https://funny-school.github.io/game/peopleplayground/'],
+           ['Bendy and the Ink Machine', 'https://placehold.co/240x160/f1c40f/000000?text=Bendy', 'https://scratch.mit.edu/projects/154562477/embed'],
+           ['Mario Kart Double Dash', 'https://placehold.co/240x160/e74c3c/ffffff?text=Double+Dash', 'https://mkpc.malahieude.net/map.php?mid=7118'],
+           ['Connect 4','https://placehold.co/240x160/1e3a8a/ffffff?text=Connect+4','Connect 4.html'],
+           ['A Small World Cup', 'https://placehold.co/240x160/1e3a8a/ffffff?text=A+Small+World+Cup', 'asmallworldcup.html'],
+           ['Crossy Road', 'https://placehold.co/240x160/2ecc71/ffffff?text=Crossy+Road', 'crossyroad.html'],
+           ['Doodle Jump', 'https://placehold.co/240x160/f1c40f/000000?text=Doodle+Jump', 'doodlejump.html'],
+           ['Mystery Game (1.21)', 'https://placehold.co/240x160/e67e22/ffffff?text=???', 'https://radmanplays.github.io/Eaglercraft-1.21/'],
+           ['Infared Movies', 'https://placehold.co/240x160/e74c3c/ffffff?text=Infared+Movies', 'https://camoflix.pages.dev/'],
+           ['Infared Bypass', 'https://placehold.co/240x160/2ecc71/ffffff?text=Infared+Bypass', 'https://algebra.learnnexus.xyz/'],
+           ['Infared Launcher', 'https://placehold.co/240x160/3498db/ffffff?text=Infared+Launcher', 'https://number60.b-cdn.net/'],
+           ['Cool Math Games', 'https://placehold.co/240x160/f1c40f/000000?text=Cool+Math+Games', 'https://www.coolmathgames.com/'],
+           ['Circle Defense', 'https://placehold.co/240x160/111118/00ffcc?text=Circle+Defense', 'circle defense.html'],
+           ['InvisiProxy', 'https://placehold.co/240x160/1abc9c/ffffff?text=InvisiProxy', 'https://invisiproxy.com/']
+         ];
+
+         const seriesData = [
+            { title: "Website Clicker", items: [["Original Clicker", "clicker.html"], ["Clicker 2.0", "WebsiteClicker2.0Updated.html"], ["Clicker 3.0", "websiteclicker3.0.html"]] },
+            { title: "FNAF Collections", items: [["FNAF Launcher", "FNAF launcher.html"], ["FNAF Legacy", "fnaf launcher old.html"], ["FNAF Restored", "FNAF launcher new.html"]] }
+         ];
+
+         // List of games that should open in the launcher's built-in preview frame
+         const previewGames = ['Super Mario Bros', 'Pokemon Roulette', 'GBA Emulator (113 Games)', 'Jelly Mario', 'Minigames', 'Secondary GBA Emulator', 'Camo Games', 'Edpuzzle Games', 'Pizza Edition Grid', 'FreezeNova', 'Hooda Math', 'PL2W Game', 'Baldi\'s Basics', 'FNAF World', 'Ultimate Custom Night', 'People Playground', 'Bendy and the Ink Machine', 'Mario Kart Double Dash', 'Mystery Game (1.21)', 'Infared Movies', 'Infared Bypass', 'Infared Launcher', 'Cool Math Games', 'Circle Defense', 'InvisiProxy'];
+
+         /* MARIO VIDEO LOGIC */
+         const marioLiverBtn = document.getElementById('marioLiverBtn');
+         const videoOverlay = document.getElementById('videoOverlay');
+         const launcherVideo = document.getElementById('launcherVideo');
+         const closeVideo = document.getElementById('closeVideo');
+
+         marioLiverBtn.onclick = () => {
+            videoOverlay.style.display = 'block';
+            launcherVideo.play();
+         };
+
+         closeVideo.onclick = () => {
+            videoOverlay.style.display = 'none';
+            launcherVideo.pause();
+            launcherVideo.currentTime = 0;
+         };
+
+         /* RICKROLL LOGIC */
+         const susButton = document.getElementById('susButton');
+         const rickrollOverlay = document.getElementById('rickrollOverlay');
+         const rickrollVideo = document.getElementById('rickrollVideo');
+         const rickrollAudio = document.getElementById('rickrollAudio');
+         const closeRickroll = document.getElementById('closeRickroll');
+         let vPromise = null, aPromise = null;
+
+         susButton.onclick = () => {
+            rickrollOverlay.style.display = 'block';
+            rickrollAudio.currentTime = 0;
+            vPromise = rickrollVideo.play();
+            aPromise = rickrollAudio.play();
+         };
+
+         closeRickroll.onclick = async () => {
+            if (vPromise) { try { await vPromise; rickrollVideo.pause(); } catch(e) {} }
+            if (aPromise) { try { await aPromise; rickrollAudio.pause(); } catch(e) {} }
+            rickrollOverlay.style.display = 'none';
+         };
+
+         /* NAVIGATION & MENUS */
+         const accountMenu = document.getElementById('accountMenu');
+         const settingsMenu = document.getElementById('settingsMenu');
+         const newsletterMenu = document.getElementById('newsletterMenu');
+         const countModal = document.getElementById('countModal');
+         const seriesModal = document.getElementById('seriesModal');
+
+         function closeAllMenus() {
+            accountMenu.style.right = "-420px";
+            settingsMenu.style.right = "-420px";
+            newsletterMenu.style.right = "-420px";
+         }
+
+         document.getElementById('hamburger').onclick = () => { closeAllMenus(); accountMenu.style.right = "0"; };
+         document.getElementById('settingsTabBtn').onclick = () => { closeAllMenus(); settingsMenu.style.right = "0"; };
+         document.getElementById('newsletterTabBtn').onclick = () => { closeAllMenus(); newsletterMenu.style.right = "0"; };
+         document.getElementById('closeMenu').onclick = closeAllMenus;
+         document.getElementById('closeSettings').onclick = closeAllMenus;
+         document.getElementById('closeNewsletter').onclick = closeAllMenus;
+
+         /* THEME LOGIC */
+         const rgbPicker = document.getElementById('rgbPicker');
+         const resetThemeBtn = document.getElementById('resetThemeBtn');
+         rgbPicker.oninput = (e) => {
+            document.documentElement.style.setProperty('--primary-color', e.target.value);
+            localStorage.setItem('launcherThemeColor', e.target.value);
+         };
+         resetThemeBtn.onclick = () => {
+            document.documentElement.style.setProperty('--primary-color', '#00b500');
+            localStorage.removeItem('launcherThemeColor');
+         };
+
+         /* SEARCH LOGIC */
+         const mainSearch = document.getElementById('mainSearch');
+         mainSearch.addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase();
+            const cards = document.querySelectorAll('.card');
+            cards.forEach(card => {
+               const title = card.getAttribute('data-title').toLowerCase();
+               if (title.includes(term)) {
+                  card.classList.remove('hidden');
+               } else {
+                  card.classList.add('hidden');
+               }
+            });
+         });
+
+         /* PREVIEW LOGIC */
+         const previewOverlay = document.getElementById('previewOverlay');
+         const previewFrame = document.getElementById('previewFrame');
+         function launchGame(gameData) {
+            const [name, img, url] = gameData;
+            if (previewGames.includes(name)) {
+               previewFrame.src = url;
+               previewOverlay.style.display = 'block';
+            } else {
+               location.href = url;
+            }
+         }
+         document.getElementById('closePreview').onclick = () => {
+            previewOverlay.style.display = 'none';
+            previewFrame.src = '';
+         };
+
+         /* RENDER GAMES */
+         const gameGrid = document.getElementById('gameGrid');
+         games.forEach(g => {
+            const card = document.createElement("div");
+            card.className = "card";
+            card.setAttribute('data-title', g);
+            
+            const img = document.createElement("img");
+            img.src = g;
+            img.alt = g;
+            img.onerror = function() {
+               this.onerror = null;
+               this.src = 'https://placehold.co/240x160/333333/white?text=No+Image';
+            };
+            
+            card.appendChild(img);
+            card.innerHTML += `<div class="playBtn">Play</div>`;
+            card.onclick = () => launchGame(g);
+            gameGrid.appendChild(card);
+         });
+
+         /* SPECIAL BUTTON LOGIC */
+         document.getElementById('mysteryBtn').onclick = () => {
+            const mysteryGame = games.find(g => g === 'Mystery Game (1.21)');
+            if (mysteryGame) launchGame(mysteryGame);
+         };
+
+         document.getElementById('randomGameBtn').onclick = () => {
+            const randomG = games[Math.floor(Math.random() * games.length)];
+            launchGame(randomG);
+         };
+
+         /* MODAL LOGIC */
+         document.getElementById('countGamesBtn').onclick = () => {
+            document.getElementById('totalGamesCount').textContent = games.length;
+            document.getElementById('countModal').style.display = 'flex';
+         };
+         document.getElementById('closeModal').onclick = () => document.getElementById('countModal').style.display = 'none';
+
+         /* SERIES LOGIC */
+         const seriesBtn = document.getElementById('seriesBtn');
+         const seriesContainer = document.getElementById('seriesContainer');
+         
+         seriesBtn.onclick = () => {
+            seriesContainer.innerHTML = "";
+            seriesData.forEach(s => {
+               const section = document.createElement("div");
+               section.className = "category-section";
+               section.innerHTML = `<div class="category-title">${s.title}</div>`;
+               
+               const itemContainer = document.createElement("div");
+               itemContainer.className = "category-items";
+               
+               s.items.forEach(item => {
+                  const btn = document.createElement("button");
+                  btn.className = "category-tag-btn";
+                  btn.textContent = item;
+                  btn.onclick = () => { location.href = item; };
+                  itemContainer.appendChild(btn);
+               });
+               
+               section.appendChild(itemContainer);
+               seriesContainer.appendChild(section);
+            });
+            seriesModal.style.display = 'flex';
+         };
+         document.getElementById('closeSeriesModal').onclick = () => seriesModal.style.display = 'none';
+
+         /* WINDOW CLICK LOGIC (CLOSE MODALS) */
+         window.onclick = (event) => {
+            if (event.target == countModal) countModal.style.display = 'none';
+            if (event.target == seriesModal) seriesModal.style.display = 'none';
+         };
+
+      </script>
+   </body>
 </html>
