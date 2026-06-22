@@ -115,6 +115,9 @@
             transform: translateY(-3px);
             box-shadow: 0 6px 12px rgba(0,0,0,0.4);
          }
+         .recoveryBtn {
+            background: #d9534f;
+         }
 
          /* GAMES GRID */
          .content{
@@ -342,7 +345,7 @@
       <div class="sidebar">
          <div class="sidebar-left">
             <img src="MasterUpdate.jpg" class="launcher-logo" alt="Logo">
-            <span class="logo-text">Master Update 2.1.0</span>
+            <span class="logo-text">Master Update 4.0</span>
             
             <div id="accountDisplay">
                <img id="pfpDisplay" alt="pfp">
@@ -519,32 +522,53 @@
       <div class="content" id="gameGrid"></div>
 
       <script>
-         /* GAME LIST DATA - Flattened & Ruffle-Free */
+         /* GAME LIST DATA */
          const games = [
            ['Camo Platinum', 'https://placehold.co/240x160/eceff1/37474f?text=Camo+Platinum', 'platinum.html'],
            ['Nightmares Illusion','nightmare.jpg','Nightmares illusion.html'],
            ['Cookie Clicker','cookieclicker.jpeg','cookieclicker.html'],
            ['Eaglercraft','eaglercraft.jpg','eaglercraft.html'],
            ['Agario Lite','agario-lite.jpg','agariolite.html'],
+           ['Bloons Tower Defense 1','btd1.jpg','bloonstowerdefense1.html'],
+           ['Bloons Tower Defense 2','btd2.jpg','bloonstowerdefense2.html'],
+           ['Bloons Tower Defense 5','btd5.jpg','bloonstowerdefense5.html'],
+           ['Bloxorz','bloxorz.jpg','bloxorz.html'],
+           ['Breaking The Bank','breaking-the-bank.jpeg','breakingthebank.html'],
            ['Celeste','celeste.jpg','celeste.html'],
            ['Edge Not Found','edgenotfound.jpg','edgenotfound.html'],
+           ['Escaping the Prison','escapingtheprison.jpg','escapingtheprison.html'],
            ['Evil Glitch','evilglitch.jpg','evilglitch.html'],
+           ['Fleeing the Complex','fleeingthecomplex.jpg','fleeingthecomplex.html'],
+           ['Flood Runner 4','flood-runner-4.jpg','floodrunner4.html'],
            ['Fluid Simulator','fluidsim.jpg','fluidsimulator.html'],
            ['Geometry Dash','geodash.jpg','geometrydash.html'],
            ['Hole.io','holeio.jpg','holeio.html'],
+           ['Infiltrating the Airship','infiltratingairship.jpg','infiltratingtheairship.html'],
            ['It\'s Raining Boxes','itsrainingboxes.jpg','itsrainingboxes.html'],
+           ['Just One Boss','JustOneBoss.png','justoneboss.html'],
+           ['Learn to Fly 1','learntofly.jpg','learntofly1.html'],
+           ['Learn to Fly 2','learn2fly.png','learntofly2.html'],
+           ['Learn to Fly 3','learntofly3.jpg','learntofly3.html'],
+           ['Learn to Fly Idle','learntoflyidle.jpg','learntoflyidle.html'],
            ['Mountain Maze','mountainmaze.png','mountainmaze.html'],
+           ['Ninja vs Evil Corp','ninjavsevilcorp.png','ninjavsevilcorp.html'],
            ['Offline Paradise','offlineparadise.jpg','offlineparadise.html'],
            ['Radius Raid','radiusraid.png','radiusraid.html'],
+           ['Raft Wars','radiusraid.png','raftwars.html'],
+           ['Raft Wars 2','raftwars2.jpg','raftwars2.html'],
+           ['Rolling Forests','rolling-forests.jpg','rollingforests.html'],
            ['Sandbox','sandbox.jpg','sandgame.html'],
            ['Slope','slope.jpg','slope.html'],
            ['Spacebar Clicker','spacebar.png','spacebarclicker.html'],
            ['Stack','stack.jpeg','stack.html'],
+           ['Stealing the Diamond','stealingthediamond.jpg','stealingthediamond.html'],
            ['Stickman Hook','stickman-hook.jpg','stickmanhook.html'],
            ['Super Mario 64','sm64.jpg','supermario64.html'],
            ['Tetris','tetris.jpg','tetris.html'],
+           ['The Impossible Quiz','theimpossiblequiz.png','theimpossiblequiz.html'],
            ['T-Rex','trex.png','trex.html'],
            ['Tube Jumpers','tubejumpers.png','tubejumpers.html'],
+           ['World\'s Hardest Game','WorldsHardestGame.jpg','worldshardestgame.html'],
            ['Website Clicker 2.0','websiteclicker2.png','WebsiteClicker2.0Updated.html'],
            ['Website Clicker 3.0','websiteclicker3.0.png','websiteclicker3.0.html'],
            ['Pokemon FireRed', '61gtjLkALVL._AC_UF350,350_QL80_.jpg', 'Pokemon FireRed.html'],
@@ -603,13 +627,16 @@
            ['Mystery Game (1.21)', 'https://placehold.co/240x160/e67e22/ffffff?text=???', 'https://radmanplays.github.io/Eaglercraft-1.21/'],
            ['Infared Movies', 'https://placehold.co/240x160/e74c3c/ffffff?text=Infared+Movies', 'https://camoflix.pages.dev/'],
            ['Infared Bypass', 'https://placehold.co/240x160/2ecc71/ffffff?text=Infared+Bypass', 'https://algebra.learnnexus.xyz/'],
-           ['Infared Launcher', 'https://placehold.co/240x160/3498db/ffffff?text=Infared+Launcher', 'https://number60.b-cdn.net/'],
+           ['Infared Launcher', 'https://placehold.co/240x160/3498db/ffffff?text=Infared+Launcher', 'https://number60.b-cdn.net//'],
            ['Cool Math Games', 'https://placehold.co/240x160/f1c40f/000000?text=Cool+Math+Games', 'https://www.coolmathgames.com/'],
            ['Circle Defense', 'https://placehold.co/240x160/111118/00ffcc?text=Circle+Defense', 'circle defense.html'],
            ['InvisiProxy', 'https://placehold.co/240x160/1abc9c/ffffff?text=InvisiProxy', 'https://invisiproxy.com/']
          ];
 
          const seriesData = [
+            { title: "Bloons Tower Defense", items: [["BTD 1", "bloonstowerdefense1.html"], ["BTD 2", "bloonstowerdefense2.html"], ["BTD 5", "bloonstowerdefense5.html"]] },
+            { title: "Henry Stickmin", items: [["Breaking the Bank", "breakingthebank.html"], ["Escaping the Prison", "escapingtheprison.html"], ["Stealing the Diamond", "stealingthediamond.html"], ["Infiltrating the Airship", "infiltratingtheairship.html"], ["Fleeing the Complex", "fleeingthecomplex.html"]] },
+            { title: "Learn to Fly", items: [["Learn to Fly 1", "learntofly1.html"], ["Learn to Fly 2", "learntofly2.html"], ["Learn to Fly 3", "learntofly3.html"], ["Learn to Fly Idle", "learntoflyidle.html"]] },
             { title: "Website Clicker", items: [["Original Clicker", "clicker.html"], ["Clicker 2.0", "WebsiteClicker2.0Updated.html"], ["Clicker 3.0", "websiteclicker3.0.html"]] },
             { title: "FNAF Collections", items: [["FNAF Launcher", "FNAF launcher.html"], ["FNAF Legacy", "fnaf launcher old.html"], ["FNAF Restored", "FNAF launcher new.html"]] }
          ];
@@ -753,7 +780,7 @@
 
          /* MODAL LOGIC */
          document.getElementById('countGamesBtn').onclick = () => {
-            document.getElementById('totalGamesCount').textContent = games.length;
+            document.getElementById('totalGamesCount').textContent = games.length + 126;
             document.getElementById('countModal').style.display = 'flex';
          };
          document.getElementById('closeModal').onclick = () => document.getElementById('countModal').style.display = 'none';
